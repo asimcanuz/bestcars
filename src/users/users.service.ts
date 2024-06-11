@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -19,6 +19,7 @@ export class UsersService {
    * @returns User[]
    */
   async create(createUserDto: CreateUserDto): Promise<User> {
+    Object.assign(createUserDto, { active: true });
     const user = this.userRepository.create(createUserDto);
     return this.userRepository.save(user);
   }
@@ -43,12 +44,20 @@ export class UsersService {
    * @param email
    * @returns User[]
    */
-  async findByEmail(email: string): Promise<User[]> {
-    return await this.userRepository.find({ where: { email, active: true } });
+  async findByEmail(email: string): Promise<User> {
+    return await this.userRepository.findOne({ where: { email:email, active: true } });
   }
 
   async findByEmailOrUsername(email?: string, username?: string): Promise<User[]>{
-    return await this.userRepository.find({ where: [{ email, active: true }, { username, active: true }] });
+    if (!email && !username) {
+      throw new BadRequestException('Email or username is required');
+    }
+    
+    return await this.userRepository.findBy({
+      email: email,
+      username: username,
+      active: true
+     });
   }
 
   /**

@@ -1,30 +1,56 @@
 ### User Authentication API
-
 #### User Signup
-POST /api/v1/auth/signup HTTP/1.1
+### John Doe
+POST /api/v1/users/signup HTTP/1.1
 Host: localhost:3000
 Content-Type: application/json
 
 {
-  "name": "John Doe",
+  "firstName": "John",
+  "lastName": "Doe",
+  "username": "johndoe",
   "email": "johndoe@example.com",
+  "password": "password123"
+}
+### Jane Doe
+POST /api/v1/users/signup HTTP/1.1
+Host: localhost:3000
+Content-Type: application/json
+
+{
+  "firstName": "Jane",
+  "lastName": "Doe",
+  "username": "janedoe",
+  "email": "janedoe@example.com",
+  "password": "password123"
+}
+
+### Signin Jane Doe
+
+POST /api/v1/users/signin HTTP/1.1
+Host: localhost:3000
+Content-Type: application/json
+
+{
+  "email": "janeoe@example.com",
   "password": "password123"
 }
 
 ### Get users
-GET  /api/v1/auth/users HTTP/1.1
-Host: localhost:3000
-
-### Get users by id
-GET  /api/v1/auth/user/1 HTTP/1.1
+GET  /api/v1/users HTTP/1.1
 Host: localhost:3000
 
 ### Get user by email
-GET  /api/v1/auth/user?email=janedoe@example.com HTTP/1.1
+GET  /api/v1/users/email?email=janedoe@example.com HTTP/1.1
 Host: localhost:3000
 
+### Get user by email and/or username
+GET /api/v1/users/search?username=janedoe&email=janedoe@example.com HTTP/1.1
+Host: localhost:3000
+
+
 ### Update user
-PUT  /api/v1/auth/user/3 HTTP/1.1
+PUT  /api/v1/users/3 HTTP/1.1
 Host: localhost:3000
 Content-Type: application/json
 
@@ -34,5 +60,5 @@ Content-Type: application/json
 }
 
 ### Delete user
-PATCH   /api/v1/auth/user/4 HTTP/1.1
+PATCH   /api/v1/users/4 HTTP/1.1
 Host: localhost:3000
