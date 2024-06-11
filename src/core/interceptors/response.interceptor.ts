@@ -10,9 +10,9 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { Response } from './response.interface';
 
-
 @Injectable()
 export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
+  
 
   intercept(
     context: ExecutionContext,
@@ -56,6 +56,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
       statusCode: status,
       message: 'Success',
       result: res,
+      timestamp: new Date().toISOString(),
     };
   }
 }
