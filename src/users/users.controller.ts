@@ -7,9 +7,14 @@ import {
   Post,
   Put,
   Query,
+  Session,
+  UseGuards
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
+
+import { AuthGuard } from 'src/guards/auth.guard';
 import { AuthService } from './auth.service';
+import { CurrentUser } from './decorators/current-user.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SignInDto } from './dto/sign-in.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -24,15 +29,46 @@ export class UsersController {
     private readonly authService: AuthService,
   ) {}
 
+
   @Post('/signup')
-  async createUser(@Body() body: CreateUserDto): Promise<UserDto> {
+  async createUser(
+    @Body() body: CreateUserDto,
+    @Session() session: any,
+  ): Promise<UserDto> {
     const user: User = await this.authService.signup(body);
+    session.userId = user.id;
     return plainToInstance(UserDto, user);
   }
 
   @Post('/signin')
-  async signIn(@Body() body: SignInDto): Promise<UserDto> {
+  async signIn(
+    @Body() body: SignInDto,
+    @Session() session: any,
+  ): Promise<UserDto> {
     const user: User = await this.authService.signin(body);
+    session.userId = user.id;
+    return plainToInstance(UserDto, user);
+  }
+
+  @Get('/signout')
+  signOut(@Session() session: any) {
+    if (!session.userId) {
+      throw new Error('You are not signed in');
+    }
+    session.userId = null;
+    return 'Sign out successfully';
+  }
+
+  // @Get('/me')
+  // async getMe(@Session() session: any): Promise<UserDto> {
+  //   const user: User = await this.usersService.findOne(parseInt(session.userId));
+  //   return plainToInstance(UserDto, user);
+  // }
+
+  @Get('/me')
+  @UseGuards(AuthGuard)
+  async me(@CurrentUser() user: User): Promise<UserDto> {
+    console.log(user);
     return plainToInstance(UserDto, user);
   }
 

@@ -25,16 +25,39 @@ Content-Type: application/json
   "password": "password123"
 }
 
-### Signin Jane Doe
+### Alice Doe
+POST /api/v1/users/signup HTTP/1.1
+Host: localhost:3000
+Content-Type: application/json
+
+{
+  "firstName": "Alice",
+  "lastName": "Doe",
+  "username": "alicedoe",
+  "email": "alicedoe@example.com",
+  "password": "password123"
+}
+
+
+### Signin
 
 POST /api/v1/users/signin HTTP/1.1
 Host: localhost:3000
 Content-Type: application/json
 
 {
-  "email": "janeoe@example.com",
+  "email": "alice@example.com",
   "password": "password123"
 }
+
+### Me
+
+GET /api/v1/users/me HTTP/1.1
+Host: localhost:3000
+
+### Signout
+GET /api/v1/users/signout HTTP/1.1
+Host: localhost:3000
 
 ### Get users
 GET  /api/v1/users HTTP/1.1

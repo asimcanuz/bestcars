@@ -30,6 +30,9 @@ export class UsersService {
    * @returns User
    */
   async findOne(id: number): Promise<User> {
+    if (!id) {
+      throw new BadRequestException('Id is required');
+    }
     const user = await this.userRepository.findOne({
       where: { id, active: true },
     });
